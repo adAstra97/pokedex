@@ -13,7 +13,7 @@ export const Home: React.FC = () => {
 
   const handleScroll = useCallback(() => {
     if (
-      window.innerHeight + window.scrollY >= document.body.scrollHeight - 20 &&
+      window.innerHeight + window.scrollY >= document.body.scrollHeight - 60 &&
       !loading &&
       hasMoreData
     ) {
@@ -32,7 +32,7 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     if (!loading && list.length > 0) {
-      setHasMoreData(list.length % 20 === 0);
+      setHasMoreData(list.length % 50 === 0);
     }
   }, [loading, list]);
 
@@ -44,7 +44,9 @@ export const Home: React.FC = () => {
           {list.map((item, index) => (
             <div key={index} className="pokemons__item">
               <img src={item.image} alt={item.name} />
-              <span className="pokemons__name">{item.name}</span>
+              <span className="pokemons__name">
+                {item.name[0].toUpperCase() + item.name.slice(1)}
+              </span>
               <div className="pokemons__types">
                 {item.types.map((type: string, idx: number) => (
                   <span key={idx} className={`type ${type}`}>
@@ -54,7 +56,6 @@ export const Home: React.FC = () => {
               </div>
             </div>
           ))}
-          {loading && <p>Loading...</p>}
           {error && <p>Error: {error}</p>}
         </div>
       </div>
