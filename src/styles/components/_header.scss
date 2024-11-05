@@ -1,0 +1,17 @@
+.header {
+  background-color: $color-orange;
+  padding: 12px 0;
+
+  &__logo {
+    color: $color-white;
+    font-weight: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-bottom: 1px solid transparent;
+    transition: border-bottom 0.2s;
+
+    &:hover {
+      border-bottom: 1px solid $color-white;
+    }
+  }
+}
