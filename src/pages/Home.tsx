@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../redux/store';
 import { fetchPokemons } from '../redux/slices/pokemonSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -10,6 +11,7 @@ export const Home: React.FC = () => {
   );
 
   const [hasMoreData, setHasMoreData] = useState(true);
+  const navigate = useNavigate();
 
   const handleScroll = useCallback(() => {
     if (
@@ -36,13 +38,20 @@ export const Home: React.FC = () => {
     }
   }, [loading, list]);
 
+  const handleToPokemonDetails = (name: string): void => {
+    navigate(`/pokemon/${name}`);
+  };
+
   return (
     <div className="wrapper">
       <div className="pokemons">
         <h1>Pokemons</h1>
         <div className="pokemons__list">
           {list.map((item, index) => (
-            <div key={index} className="pokemons__item">
+            <button
+              key={index}
+              className="pokemons__item"
+              onClick={() => handleToPokemonDetails(item.name)}>
               <img src={item.image} alt={item.name} />
               <span className="pokemons__name">
                 {item.name[0].toUpperCase() + item.name.slice(1)}
@@ -54,7 +63,7 @@ export const Home: React.FC = () => {
                   </span>
                 ))}
               </div>
-            </div>
+            </button>
           ))}
           {error && <p>Error: {error}</p>}
         </div>
