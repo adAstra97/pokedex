@@ -10,12 +10,14 @@ interface IPokemonState {
   list: IPokemonCardData[];
   loading: boolean;
   error: string | null;
+  offset: number;
 }
 
 const initialState: IPokemonState = {
   list: [],
   loading: false,
-  error: null
+  error: null,
+  offset: 0
 };
 
 export const fetchPokemons = createAsyncThunk<IPokemonCardData[], number>(
@@ -24,6 +26,7 @@ export const fetchPokemons = createAsyncThunk<IPokemonCardData[], number>(
     const response = await axios.get(
       `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=20`
     );
+
     const pokemonDetails = await Promise.all(
       response.data.results.map(async (item: IPokemonItem) => {
         const details = await axios.get(item.url);
@@ -49,7 +52,8 @@ const pokemonSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchPokemons.fulfilled, (state, action) => {
-        state.list = [...state.list, ...action.payload];
+        state.list.push(...action.payload);
+        state.offset += action.payload.length;
         state.loading = false;
       })
       .addCase(fetchPokemons.rejected, (state, action) => {

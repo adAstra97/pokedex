@@ -1,15 +1,40 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../redux/store';
 import { fetchPokemons } from '../redux/slices/pokemonSlice';
 
 export const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { list, loading, error } = useSelector((state: RootState) => state.pokemon);
+  const { list, offset, loading, error } = useSelector(
+    (state: RootState) => state.pokemon
+  );
+
+  const [hasMoreData, setHasMoreData] = useState(true);
+
+  const handleScroll = useCallback(() => {
+    if (
+      window.innerHeight + window.scrollY >= document.body.scrollHeight - 20 &&
+      !loading &&
+      hasMoreData
+    ) {
+      dispatch(fetchPokemons(offset));
+    }
+  }, [offset, loading, hasMoreData, dispatch]);
 
   useEffect(() => {
     dispatch(fetchPokemons(0));
   }, [dispatch]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
+
+  useEffect(() => {
+    if (!loading && list.length > 0) {
+      setHasMoreData(list.length % 20 === 0);
+    }
+  }, [loading, list]);
 
   return (
     <div className="wrapper">
@@ -30,7 +55,7 @@ export const Home: React.FC = () => {
             </div>
           ))}
           {loading && <p>Loading...</p>}
-          {error && <p>{error}</p>}
+          {error && <p>Error: {error}</p>}
         </div>
       </div>
     </div>
