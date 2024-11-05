@@ -1,0 +1,38 @@
+@import url(https://fonts.googleapis.com/css?family=Nunito:300,regular,500,600,700,800,900);
+
+@import "./variables";
+@import "./mixins";
+@import "./libs/normalize";
+@import "./components/all";
+
+
+.wrapper {
+  position: relative;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+
+  @include mobile {
+    max-width: 100%;
+  }
+
+  @include mobile-x {
+    max-width: calc(100% - 40px);
+  }
+
+  @include tablet {
+    max-width: $tablet;
+  }
+
+  @include laptop {
+    max-width: $laptop;
+  }
+
+  @include desktop {
+    max-width: 1150px;
+  }
+
+  @include desktop-xl {
+    max-width: 1600px;
+  }
+}
