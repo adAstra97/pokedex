@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-interface IPokemon {
-  name: string;
-  url: string;
-}
+import type {
+  IPokemonCardData,
+  IPokemonItem,
+  IPokemonType
+} from '../../types/interfaces';
 
 interface IPokemonState {
-  list: IPokemon[];
+  list: IPokemonCardData[];
   loading: boolean;
   error: string | null;
 }
@@ -18,13 +18,24 @@ const initialState: IPokemonState = {
   error: null
 };
 
-export const fetchPokemons = createAsyncThunk(
+export const fetchPokemons = createAsyncThunk<IPokemonCardData[], number>(
   'pokemon/fetchPokemons',
   async (offset: number) => {
     const response = await axios.get(
       `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=20`
     );
-    return response.data.results;
+    const pokemonDetails = await Promise.all(
+      response.data.results.map(async (item: IPokemonItem) => {
+        const details = await axios.get(item.url);
+        const pokemonCardData: IPokemonCardData = {
+          name: item.name,
+          image: details.data.sprites.front_default,
+          types: details.data.types.map((type: IPokemonType) => type.type.name)
+        };
+        return pokemonCardData;
+      })
+    );
+    return pokemonDetails;
   }
 );
 

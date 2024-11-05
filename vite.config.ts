@@ -1,6 +1,6 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import sass from "sass";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import sass from 'sass';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -8,8 +8,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        implementation: sass,
-      },
-    },
-  },
+        implementation: sass
+      }
+    }
+  }
 });
