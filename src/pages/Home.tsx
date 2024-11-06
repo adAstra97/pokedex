@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../redux/store';
-import { useNavigate } from 'react-router-dom';
 import {
   fetchAllPokemons,
   fetchPokemonDetails,
@@ -10,6 +9,7 @@ import {
 } from '../redux/slices/pokemonSlice';
 import type { IPokemonUrl } from '../types/interfaces';
 import axios from 'axios';
+import { PokemonCard } from '../components/PokemonCard';
 
 export const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,8 +22,6 @@ export const Home: React.FC = () => {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [isFiltering, setIsFiltering] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
-
-  const navigate = useNavigate();
 
   const handleScroll = useCallback(() => {
     if (
@@ -105,10 +103,6 @@ export const Home: React.FC = () => {
     filteredUrls.some(filtered => filtered.name === pokemon.name)
   );
 
-  const handleToPokemonDetails = (name: string): void => {
-    navigate(`/pokemon/${name}`);
-  };
-
   return (
     <div className="wrapper">
       <div className="pokemons">
@@ -138,22 +132,7 @@ export const Home: React.FC = () => {
             <p className="message">Loading...</p>
           ) : filteredList.length > 0 ? (
             filteredList.map((item, index) => (
-              <button
-                key={index}
-                className="pokemons__item"
-                onClick={() => handleToPokemonDetails(item.name)}>
-                <img src={item.image} alt={item.name} />
-                <span className="pokemons__name">
-                  {item.name[0].toUpperCase() + item.name.slice(1)}
-                </span>
-                <div className="pokemons__types">
-                  {item.types.map((type: string, idx: number) => (
-                    <span key={idx} className={`type ${type}`}>
-                      {type}
-                    </span>
-                  ))}
-                </div>
-              </button>
+              <PokemonCard item={item} key={index} />
             ))
           ) : (
             <p className="message">No pokemons found</p>

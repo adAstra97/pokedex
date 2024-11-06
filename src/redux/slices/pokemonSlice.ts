@@ -13,6 +13,7 @@ interface IPokemonState {
   error: string | null;
   offset: number;
   types: IPokemonUrl[];
+  favorites: IPokemonCardData[];
 }
 
 const initialState: IPokemonState = {
@@ -21,7 +22,8 @@ const initialState: IPokemonState = {
   loading: false,
   error: null,
   offset: 0,
-  types: []
+  types: [],
+  favorites: JSON.parse(localStorage.getItem('favorites') || '[]')
 };
 
 export const fetchAllPokemons = createAsyncThunk<IPokemonUrl[]>(
@@ -72,6 +74,16 @@ const pokemonSlice = createSlice({
     resetOffset: state => {
       state.offset = 0;
       state.list = [];
+    },
+    toggleFavorite: (state, action) => {
+      const pokemon = action.payload;
+      const exists = state.favorites.find(p => p.name === pokemon.name);
+      if (exists) {
+        state.favorites = state.favorites.filter(p => p.name !== pokemon.name);
+      } else {
+        state.favorites.push(pokemon);
+      }
+      localStorage.setItem('favorites', JSON.stringify(state.favorites));
     }
   },
   extraReducers: builder => {
@@ -122,5 +134,5 @@ const pokemonSlice = createSlice({
   }
 });
 
-export const { resetOffset } = pokemonSlice.actions;
+export const { resetOffset, toggleFavorite } = pokemonSlice.actions;
 export default pokemonSlice.reducer;

@@ -1,0 +1,14 @@
+.favorites {
+  padding: 10px 0 30px;
+
+  h1 {
+    margin-bottom: 15px;
+    text-align: right;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 350px));
+    gap: 20px;
+  }
+}
