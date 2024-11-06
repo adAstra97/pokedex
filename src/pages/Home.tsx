@@ -1,30 +1,37 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../redux/store';
-import { fetchPokemons } from '../redux/slices/pokemonSlice';
 import { useNavigate } from 'react-router-dom';
+import {
+  fetchAllPokemons,
+  fetchPokemonDetails,
+  resetOffset
+} from '../redux/slices/pokemonSlice';
+import type { IPokemonItem } from '../types/interfaces';
 
 export const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { list, offset, loading, error } = useSelector(
+  const { list, offset, loading, error, allPokemonUrls } = useSelector(
     (state: RootState) => state.pokemon
   );
 
-  const [hasMoreData, setHasMoreData] = useState(true);
+  const [filteredUrls, setFilteredUrls] = useState<IPokemonItem[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const navigate = useNavigate();
 
   const handleScroll = useCallback(() => {
     if (
       window.innerHeight + window.scrollY >= document.body.scrollHeight - 60 &&
       !loading &&
-      hasMoreData
+      filteredUrls.length > 0
     ) {
-      dispatch(fetchPokemons(offset));
+      dispatch(fetchPokemonDetails({ offset, urls: filteredUrls }));
     }
-  }, [offset, loading, hasMoreData, dispatch]);
+  }, [offset, loading, filteredUrls, dispatch]);
 
   useEffect(() => {
-    dispatch(fetchPokemons(0));
+    dispatch(fetchAllPokemons());
   }, [dispatch]);
 
   useEffect(() => {
@@ -32,11 +39,38 @@ export const Home: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
-  useEffect(() => {
-    if (!loading && list.length > 0) {
-      setHasMoreData(list.length % 50 === 0);
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+
+    if (query === '') {
+      setFilteredUrls(allPokemonUrls);
+      dispatch(resetOffset());
+    } else {
+      dispatch(resetOffset());
     }
-  }, [loading, list]);
+  };
+
+  useEffect(() => {
+    if (searchQuery === '') {
+      setFilteredUrls(allPokemonUrls);
+    } else {
+      const filtered = allPokemonUrls.filter(pokemon =>
+        pokemon.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredUrls(filtered);
+    }
+  }, [searchQuery, allPokemonUrls]);
+
+  useEffect(() => {
+    if (filteredUrls.length > 0 && offset === 0) {
+      dispatch(fetchPokemonDetails({ offset: 0, urls: filteredUrls }));
+    }
+  }, [filteredUrls, offset, dispatch]);
+
+  const filteredList = list.filter(pokemon =>
+    filteredUrls.some(filtered => filtered.name === pokemon.name)
+  );
 
   const handleToPokemonDetails = (name: string): void => {
     navigate(`/pokemon/${name}`);
@@ -46,8 +80,16 @@ export const Home: React.FC = () => {
     <div className="wrapper">
       <div className="pokemons">
         <h1>Pokemons</h1>
+
+        <input
+          type="text"
+          placeholder="Search Pokemon..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+        />
+
         <div className="pokemons__list">
-          {list.map((item, index) => (
+          {filteredList.map((item, index) => (
             <button
               key={index}
               className="pokemons__item"

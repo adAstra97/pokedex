@@ -12,6 +12,7 @@ export interface IPokemonType {
 }
 
 export interface IPokemonCardData {
+  id: number;
   name: string;
   image: string;
   types: string[];

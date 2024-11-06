@@ -5,6 +5,9 @@
 @import "./libs/normalize";
 @import "./components/all";
 
+body {
+  background-color: $color-light-yellow;
+}
 
 .wrapper {
   position: relative;
@@ -35,8 +38,4 @@
   @include desktop-xl {
     max-width: 1600px;
   }
-}
-
-.content {
-  background-color: $color-light-yellow;
 }
