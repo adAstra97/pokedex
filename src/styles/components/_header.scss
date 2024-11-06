@@ -2,7 +2,12 @@
   background-color: $color-orange;
   padding: 12px 0;
 
-  &__logo {
+  .wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__link {
     color: $color-white;
     font-weight: 18px;
     font-weight: 700;
@@ -10,7 +15,8 @@
     border-bottom: 1px solid transparent;
     transition: border-bottom 0.2s;
 
-    &:hover {
+    &:hover,
+    &.active {
       border-bottom: 1px solid $color-white;
     }
   }

@@ -9,7 +9,7 @@ const Favorites: React.FC = () => {
   return (
     <div className="wrapper">
       <div className="favorites">
-        <h1>Your Favorite Pokémons</h1>
+        <h1>Your Favorite Pokemons</h1>
         {favorites.length === 0 ? (
           <p className="message">No favorites yet.</p>
         ) : (

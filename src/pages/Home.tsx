@@ -38,7 +38,7 @@ export const Home: React.FC = () => {
     dispatch(fetchAllPokemons()).then(() => {
       setTimeout(() => {
         setIsFirstLoad(false);
-      }, 500);
+      }, 1000);
     });
   }, [dispatch]);
 
@@ -79,7 +79,7 @@ export const Home: React.FC = () => {
     dispatch(resetOffset());
     setTimeout(() => {
       setIsFiltering(false);
-    }, 500);
+    }, 1000);
   };
 
   const handleTypeFilter = async (typeUrl: string) => {
@@ -96,7 +96,7 @@ export const Home: React.FC = () => {
     dispatch(resetOffset());
     setTimeout(() => {
       setIsFiltering(false);
-    }, 500);
+    }, 1000);
   };
 
   const filteredList = list.filter(pokemon =>
