@@ -84,6 +84,7 @@ export const Home: React.FC = () => {
 
   const handleTypeFilter = async (typeUrl: string) => {
     setSelectedType(typeUrl);
+    setSearchQuery('');
     setFilteredUrls([]);
     setIsFiltering(true);
 
