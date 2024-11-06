@@ -2,17 +2,17 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type {
   IPokemonCardData,
-  IPokemonItem,
+  IPokemonUrl,
   IPokemonType
 } from '../../types/interfaces';
 
 interface IPokemonState {
-  allPokemonUrls: IPokemonItem[];
+  allPokemonUrls: IPokemonUrl[];
   list: IPokemonCardData[];
   loading: boolean;
   error: string | null;
   offset: number;
-  types: IPokemonItem[];
+  types: IPokemonUrl[];
 }
 
 const initialState: IPokemonState = {
@@ -24,13 +24,13 @@ const initialState: IPokemonState = {
   types: []
 };
 
-export const fetchAllPokemons = createAsyncThunk<IPokemonItem[]>(
+export const fetchAllPokemons = createAsyncThunk<IPokemonUrl[]>(
   'pokemon/fetchAllPokemonUrls',
   async () => {
     const response = await axios.get(
       `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`
     );
-    return response.data.results.map((item: IPokemonItem) => ({
+    return response.data.results.map((item: IPokemonUrl) => ({
       name: item.name,
       url: item.url
     }));
@@ -39,7 +39,7 @@ export const fetchAllPokemons = createAsyncThunk<IPokemonItem[]>(
 
 export const fetchPokemonDetails = createAsyncThunk<
   IPokemonCardData[],
-  { offset: number; urls: IPokemonItem[] }
+  { offset: number; urls: IPokemonUrl[] }
 >('pokemon/fetchPokemonDetails', async ({ offset, urls }) => {
   const pokemonDetails = await Promise.all(
     urls.slice(offset, offset + 50).map(async ({ name, url }) => {
@@ -57,7 +57,7 @@ export const fetchPokemonDetails = createAsyncThunk<
 });
 
 export const fetchPokemonTypes = createAsyncThunk<
-  IPokemonItem[],
+  IPokemonUrl[],
   void,
   { rejectValue: string }
 >('pokemon/fetchPokemonTypes', async () => {

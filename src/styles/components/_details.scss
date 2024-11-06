@@ -1,0 +1,58 @@
+.details {
+  padding: 10px 0 30px;
+
+  h1 {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  h3 {
+    margin: 20px 0 10px;
+    color: $color-dark-orange;
+  }
+
+  img {
+    width: 200px;
+    align-self: center;
+  }
+
+  li {
+    margin-bottom: 5px;
+  }
+
+  &__content {
+    margin: 0 auto;
+    display: grid;
+    column-gap: 50px;
+    justify-content: center;
+    color: $color-black;
+
+    @include mobile-x {
+      grid-template-areas: "left right" "bot bot";
+    }
+  }
+
+  &__left {
+    display: flex;
+    justify-content: center;
+
+    @include mobile-x {
+      grid-area: left;
+    }
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: column;
+
+    @include mobile-x {
+      grid-area: right;
+    }
+  }
+
+  &__bottom {
+    @include mobile-x {
+      grid-area: bot;
+    }
+  }
+}

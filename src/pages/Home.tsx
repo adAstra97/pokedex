@@ -8,7 +8,7 @@ import {
   fetchPokemonTypes,
   resetOffset
 } from '../redux/slices/pokemonSlice';
-import type { IPokemonItem } from '../types/interfaces';
+import type { IPokemonUrl } from '../types/interfaces';
 import axios from 'axios';
 
 export const Home: React.FC = () => {
@@ -17,7 +17,7 @@ export const Home: React.FC = () => {
     (state: RootState) => state.pokemon
   );
 
-  const [filteredUrls, setFilteredUrls] = useState<IPokemonItem[]>([]);
+  const [filteredUrls, setFilteredUrls] = useState<IPokemonUrl[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [isFiltering, setIsFiltering] = useState(false);
@@ -91,7 +91,7 @@ export const Home: React.FC = () => {
 
     const response = await axios.get(typeUrl);
     const pokemonsWithType = response.data.pokemon.map(
-      (p: { pokemon: IPokemonItem }) => p.pokemon
+      (p: { pokemon: IPokemonUrl }) => p.pokemon
     );
 
     setFilteredUrls(pokemonsWithType);
