@@ -12,7 +12,7 @@
 
 ::-webkit-scrollbar-track {
   background: $color-white;
-  border-radius: 4px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -26,6 +26,10 @@
 
 body {
   background-color: $color-light-yellow;
+}
+html {
+  margin-right: calc(-1 * (100vw - 100%));
+  overflow-x: hidden;
 }
 
 h1 {
