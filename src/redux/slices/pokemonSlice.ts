@@ -12,6 +12,7 @@ interface IPokemonState {
   loading: boolean;
   error: string | null;
   offset: number;
+  types: IPokemonItem[];
 }
 
 const initialState: IPokemonState = {
@@ -19,7 +20,8 @@ const initialState: IPokemonState = {
   list: [],
   loading: false,
   error: null,
-  offset: 0
+  offset: 0,
+  types: []
 };
 
 export const fetchAllPokemons = createAsyncThunk<IPokemonItem[]>(
@@ -54,6 +56,15 @@ export const fetchPokemonDetails = createAsyncThunk<
   return pokemonDetails;
 });
 
+export const fetchPokemonTypes = createAsyncThunk<
+  IPokemonItem[],
+  void,
+  { rejectValue: string }
+>('pokemon/fetchPokemonTypes', async () => {
+  const response = await axios.get('https://pokeapi.co/api/v2/type/?limit=100');
+  return response.data.results;
+});
+
 const pokemonSlice = createSlice({
   name: 'pokemon',
   initialState,
@@ -65,6 +76,7 @@ const pokemonSlice = createSlice({
   },
   extraReducers: builder => {
     builder
+      // all pokemons
       .addCase(fetchAllPokemons.pending, state => {
         state.loading = true;
       })
@@ -76,7 +88,7 @@ const pokemonSlice = createSlice({
         state.error = action.error.message || 'Failed to fetch pokemon URLs';
         state.loading = false;
       })
-
+      // detailed information
       .addCase(fetchPokemonDetails.pending, state => {
         state.loading = true;
       })
@@ -94,12 +106,21 @@ const pokemonSlice = createSlice({
       .addCase(fetchPokemonDetails.rejected, (state, action) => {
         state.error = action.error.message || 'Failed to fetch pokemon details';
         state.loading = false;
+      })
+      // types
+      .addCase(fetchPokemonTypes.pending, state => {
+        state.loading = true;
+      })
+      .addCase(fetchPokemonTypes.fulfilled, (state, action) => {
+        state.types = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchPokemonTypes.rejected, (state, action) => {
+        state.error = action.error.message || 'Failed to fetch pokemon types';
+        state.loading = false;
       });
   }
 });
 
 export const { resetOffset } = pokemonSlice.actions;
 export default pokemonSlice.reducer;
-// console.log(filteredUrls);
-// console.log(offset);
-// console.log(list);
