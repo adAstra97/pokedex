@@ -4,6 +4,7 @@ import sass from 'sass';
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './',
   plugins: [react()],
   css: {
     preprocessorOptions: {
