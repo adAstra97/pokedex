@@ -25,7 +25,7 @@ const initialState: IPokemonState = {
   offset: 0,
   types: [],
   favorites: JSON.parse(localStorage.getItem('favorites') || '[]'),
-  currentType: '',
+  currentType: ''
 };
 
 export const fetchAllPokemons = createAsyncThunk<IPokemonUrl[]>(
@@ -139,5 +139,6 @@ const pokemonSlice = createSlice({
   }
 });
 
-export const { resetOffset, toggleFavorite, setCurrentType } = pokemonSlice.actions;
+export const { resetOffset, toggleFavorite, setCurrentType } =
+  pokemonSlice.actions;
 export default pokemonSlice.reducer;
