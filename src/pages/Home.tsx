@@ -5,7 +5,8 @@ import {
   fetchAllPokemons,
   fetchPokemonDetails,
   fetchPokemonTypes,
-  resetOffset
+  resetOffset,
+  setCurrentType
 } from '../redux/slices/pokemonSlice';
 import type { IPokemonUrl } from '../types/interfaces';
 import axios from 'axios';
@@ -13,13 +14,11 @@ import { PokemonCard } from '../components/PokemonCard';
 
 export const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { list, offset, loading, error, allPokemonUrls, types } = useSelector(
-    (state: RootState) => state.pokemon
-  );
+  const { list, offset, loading, error, allPokemonUrls, types, currentType } =
+    useSelector((state: RootState) => state.pokemon);
 
   const [filteredUrls, setFilteredUrls] = useState<IPokemonUrl[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedType, setSelectedType] = useState<string | null>(null);
   const [isFiltering, setIsFiltering] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
@@ -83,7 +82,7 @@ export const Home: React.FC = () => {
   };
 
   const handleTypeFilter = async (typeUrl: string) => {
-    setSelectedType(typeUrl);
+    dispatch(setCurrentType(typeUrl));
     setSearchQuery('');
     setFilteredUrls([]);
     setIsFiltering(true);
@@ -120,7 +119,7 @@ export const Home: React.FC = () => {
         <div className="types">
           {types.map(type => (
             <button
-              className={selectedType === type.url ? 'active' : ''}
+              className={currentType === type.url ? 'active' : ''}
               key={type.name}
               onClick={() => handleTypeFilter(type.url)}>
               {type.name[0].toUpperCase() + type.name.slice(1)}
