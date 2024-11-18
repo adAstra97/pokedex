@@ -74,7 +74,7 @@ export const Home: React.FC = () => {
       setFilteredUrls(allPokemonUrls);
     }
 
-    setSelectedType(null);
+    dispatch(setCurrentType(''));
     dispatch(resetOffset());
     setTimeout(() => {
       setIsFiltering(false);
