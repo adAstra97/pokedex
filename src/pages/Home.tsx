@@ -84,7 +84,19 @@ export const Home: React.FC = React.memo(() => {
     }, 1000);
   };
 
+  const resetFilterType = (): void => {
+    dispatch(setCurrentType(''));
+    setSearchQuery('');
+    setFilteredUrls(allPokemonUrls);
+    dispatch(resetOffset());
+  };
+
   const handleTypeFilter = async (typeUrl: string) => {
+    if (currentType === typeUrl) {
+      resetFilterType();
+      return;
+    }
+
     dispatch(setCurrentType(typeUrl));
     setSearchQuery('');
     setFilteredUrls([]);
