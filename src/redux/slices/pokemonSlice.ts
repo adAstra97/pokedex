@@ -1,3 +1,4 @@
+import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type {
@@ -77,7 +78,7 @@ const pokemonSlice = createSlice({
       state.offset = 0;
       state.list = [];
     },
-    toggleFavorite: (state, action) => {
+    toggleFavorite: (state, action: PayloadAction<IPokemonCardData>) => {
       const pokemon = action.payload;
       const exists = state.favorites.find(p => p.name === pokemon.name);
       if (exists) {
@@ -87,7 +88,7 @@ const pokemonSlice = createSlice({
       }
       localStorage.setItem('favorites', JSON.stringify(state.favorites));
     },
-    setCurrentType: (state, action) => {
+    setCurrentType: (state, action: PayloadAction<string>) => {
       state.currentType = action.payload;
     }
   },
