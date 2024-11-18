@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '../redux/store';
 import { PokemonCard } from '../components/PokemonCard';
 
-const Favorites: React.FC = () => {
+export const Favorites: React.FC = React.memo(() => {
   const favorites = useSelector((state: RootState) => state.pokemon.favorites);
 
   return (
@@ -22,6 +22,6 @@ const Favorites: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
-export default Favorites;
+Favorites.displayName = 'Favorites';

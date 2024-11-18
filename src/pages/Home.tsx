@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../redux/store';
 import {
@@ -12,7 +12,7 @@ import type { IPokemonUrl } from '../types/interfaces';
 import axios from 'axios';
 import { PokemonCard } from '../components/PokemonCard';
 
-export const Home: React.FC = () => {
+export const Home: React.FC = React.memo(() => {
   const dispatch = useDispatch<AppDispatch>();
   const { list, offset, loading, error, allPokemonUrls, types, currentType } =
     useSelector((state: RootState) => state.pokemon);
@@ -67,6 +67,9 @@ export const Home: React.FC = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     const query = event.target.value;
+
+    if (query.startsWith(' ')) return;
+
     setIsFiltering(true);
     setSearchQuery(query);
 
@@ -99,8 +102,12 @@ export const Home: React.FC = () => {
     }, 1000);
   };
 
-  const filteredList = list.filter(pokemon =>
-    filteredUrls.some(filtered => filtered.name === pokemon.name)
+  const filteredList = useMemo(
+    () =>
+      list.filter(pokemon =>
+        filteredUrls.some(filtered => filtered.name === pokemon.name)
+      ),
+    [list, filteredUrls]
   );
 
   return (
@@ -142,4 +149,6 @@ export const Home: React.FC = () => {
       </div>
     </div>
   );
-};
+});
+
+Home.displayName = 'Home';

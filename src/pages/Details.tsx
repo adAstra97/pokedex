@@ -14,7 +14,7 @@ interface IFlavorTextEntry {
   version_group: IPokemonUrl;
 }
 
-const Details: React.FC = () => {
+export const Details: React.FC = React.memo(() => {
   const { name } = useParams<{ name: string }>();
   const [pokemon, setPokemon] = useState<IPokemon | null>(null);
   const [abilityDescriptions, setAbilityDescriptions] = useState<
@@ -125,6 +125,6 @@ const Details: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
-export default Details;
+Details.displayName = 'Details';

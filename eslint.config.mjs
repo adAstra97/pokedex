@@ -53,6 +53,7 @@ export default [
     },
 
     rules: {
+      'react/prop-types': 'off',
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
 
